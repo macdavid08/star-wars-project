@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./App.css";
 import { Card } from "./Utilities/Card";
 import { Movies } from "./components/Movies";
@@ -9,9 +9,7 @@ function App() {
   const [isLoading, setisLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    fetchMovieHandler();
-  }, []);
+  
 
   // const fetchMovieHandler = ()=>{
   //  fetch('https://swapi.dev/api/films/').then(resp=>{
@@ -28,7 +26,8 @@ function App() {
 
   // }
 
-  async function fetchMovieHandler() {
+  const  fetchMovieHandler = useCallback(async ()=>{
+
     setisLoading(true);
     setError(null);
     try {
@@ -61,7 +60,12 @@ function App() {
       setError(error.message);
     }
     setisLoading(false);
-  }
+  }, []) 
+
+  useEffect(() => {
+    fetchMovieHandler();
+  }, [fetchMovieHandler]);
+  
 
   async function postMovieData (dataInput) {
     const res = await fetch("https://post-data-48498-default-rtdb.firebaseio.com/movie.json", {
